@@ -1,5 +1,5 @@
-module.exports = function(sequelize , DataTypes) {
-	return sequalize.define ('todo' , {
+module.exports = function(sequelize, DataTypes) {
+	return sequelize.define('todo', {
 		description: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -14,3 +14,4 @@ module.exports = function(sequelize , DataTypes) {
 		}
 	});
 };
+
