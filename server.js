@@ -63,6 +63,28 @@ app.get('/todos/:id', function(req, res) {
 	});	
 });
 
+app.delete('/todos/:id' , function (req , res){
+	var todoId = parseInt(req.params.id , 10);
+	var matchTodo;
+	var where = {};
+
+	db.todo.destroy ({
+		where: {
+			id: todoId
+		}
+	}).then (function(rowsDeleted) {
+		if (rowsDeleted == 0) {
+			res.status(404).json({
+				error: 'No todo with Id'
+			});
+		}else {
+			res.status(204).send();
+		}
+	}).catch (function(e){
+		res.status(500).send();
+	});	
+});
+
 db.sequelize.sync().then(function() {
 	app.listen(PORT, function() {
 		console.log('Express Listening on port ' + PORT + '!');
