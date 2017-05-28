@@ -114,13 +114,31 @@ app.put('/todos/:id', function(req, res) {
 });
 
 //user Create
-app.post('/user' ,  function(req , res) {
+app.post('/users' ,  function(req , res) {
 	var body = _.pick(req.body, 'email' , 'password');
 
 	db.user.create(body).then(function(user){
 		res.json(user.toJSON());
 	}).catch (function(e){
 		res.status(400).json(e);
+	});
+});
+
+//user get
+app.get('/users', function(req , res){
+	var query = req.query;
+	var where = {};
+	if (query.hasOwnProperty('email') {
+		where.email = {
+			$like: '%' + query.email + '%';
+		}
+	} 
+	db.user.findAll({
+		where: where
+	}).then(function(users) {
+		res.json(users);
+	}).catch(function(e) {
+		res.status(500).send();
 	});
 });
 
