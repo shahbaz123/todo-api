@@ -128,11 +128,11 @@ app.post('/users' ,  function(req , res) {
 app.get('/users', function(req , res){
 	var query = req.query;
 	var where = {};
-	if (query.hasOwnProperty('email') {
+	if (query.hasOwnProperty('email')) {
 		where.email = {
-			$like: '%' + query.email + '%';
+			$like: '%' + query.email + '%'
 		}
-	} 
+	}; 
 	db.user.findAll({
 		where: where
 	}).then(function(users) {
@@ -142,7 +142,7 @@ app.get('/users', function(req , res){
 	});
 });
 
-db.sequelize.sync().then(function() {
+db.sequelize.sync({force:true}).then(function() {
 	app.listen(PORT, function() {
 		console.log('Express Listening on port ' + PORT + '!');
 	});
