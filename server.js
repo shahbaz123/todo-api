@@ -85,6 +85,32 @@ app.delete('/todos/:id' , function (req , res){
 	});	
 });
 
+app.put('/todos/:id', function(req , res){
+	var todoId = parseInt(req.params.id , 10);
+	var body = _.pick(req.body , 'description' , 'completed');
+	var attributes = {};
+
+	if (body.hasOwnProperty('completed'))
+		attributes.completed = body.completed;
+	if (body.hasOwnProperty('description'))
+		attributes.description = body.description;
+
+	db.todo.findById(todoId).then(function(todo){
+		if (todo){
+			return todo.update(attributes);
+		}else {
+			res.status(404).send();
+		}
+	}, function(){
+		res.status(500).send();
+	}).then (function(todo){
+		res.json(todo.toJSON());
+	}, function(e){
+		res.status(400).json(e);
+	})
+	
+});
+
 db.sequelize.sync().then(function() {
 	app.listen(PORT, function() {
 		console.log('Express Listening on port ' + PORT + '!');
