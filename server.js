@@ -33,17 +33,16 @@ app.get('/todos', function(req, res) {
 app.get('/todos/:id', function(req, res) {
 	var todoId = parseInt(req.params.id, 10);
 	var matchTodo;
-	/*for ( var i = todos.length - 1; i >= 0; i--) {
-		if ( i == req.params.id)
-			res.json(todos[i]);
-	}*/
-	todos.forEach(function(todo) {
-		if (todoId == todo.id)
-			matchTodo = todo;
-	});
-	if (matchTodo)
-		res.json(matchTodo);
-	res.status(404).send();
+
+	db.todo.findById(todoId).then(function(todo){
+		if (!!todo){
+			res.status(200).json(todo.toJSON())	
+		}else
+		    res.status(404).send();
+		
+	}).catch(function(e){
+		res.status(400).send();
+	});	
 });
 
 db.sequelize.sync().then(function() {
