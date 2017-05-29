@@ -125,32 +125,14 @@ app.post('/users', function(req, res) {
 });
 
 // POST /users/login
-app.post('/users/login', function (req , res) {
-	var body = _.pick (req.body , 'email' , 'password');
-    var where = {};
+app.post('/users/login', function(req, res) {
+	var body = _.pick(req.body, 'email', 'password');
 
-	if (typeof body.email !== 'string' ||
-		typeof body.password !== 'string'){
-		return res.status(400).send();
-	}
-
-	where.email = body.email;
-	db.user.findOne({
-		where : {
-			email: body.email
-		}
-	}).then (function(user){
-		if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))){
-			res.status(401).send();
-		}else {
-
-			res.json(user.toPublicJSON());
-		}
+	db.user.authenticate(body).then(function(user){
+		res.json(user.toPublicJSON());
 	}).catch (function(e){
-		res.status(500).send();
+		res.status(401).send();
 	});
-
-
 });
 
 db.sequelize.sync().then(function() {
