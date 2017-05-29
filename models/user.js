@@ -65,7 +65,7 @@ module.exports = function(sequelize, DataTypes) {
 					});
 				});
 			}
-		}
+		},
 		instanceMethods: {
 			toPublicJSON: function() {
 				var json = this.toJSON();
