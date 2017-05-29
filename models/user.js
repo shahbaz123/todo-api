@@ -47,8 +47,7 @@ module.exports = function(sequelize, DataTypes) {
 						typeof body.password !== 'string') {
 						return res.status(400).send();
 					}
-
-					where.email = body.email;
+					
 					user.findOne({
 						where: {
 							email: body.email
