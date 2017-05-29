@@ -19,44 +19,42 @@ var Todo = sequelize.define('todo', {
 	}
 })
 
-sequelize.sync().then(function() {
+var User = sequelize.define('user', {
+	email: Sequelize.STRING
+});
+
+// Todo table entries will have one associated user
+Todo.belongsTo(User);
+// users can have multiple Todo
+User.hasMany(Todo);
+
+
+sequelize.sync(
+	//{force:true}
+).then(function() {
 	console.log('Everything is synced');
 
-	Todo.findById(2).then(function(todo) {
-		if (todo) {
-			console.log(todo);
-		} else
-			console.log('todo not found');
-	}).catch(function(e) {
-		console.log(e);
-	});
-	/*
-	Todo.create({
-	description: 'Working on it',		
-		completed: false
-	}).then(function(todo) {
-		return Todo.create({
-			description:'Clean Office'
-		});
-	}).then (function(){
-		//return Todo.findById(1);
-		return Todo.findAll({
+	// Find me a first user then get the todos of the users todo records.
+	User.findById(1).then(function(user) {
+		user.getTodos(
 			where: {
-				description: {
-					$like: '%Working%'
-				}
+				completed: false
 			}
-		});
-	}).then(function(todos){
-		if (todos){
-			todos.forEach(function(todo){
+		).then(function(todos) {
+			todos.forEach(function(todo) {
 				console.log(todo.toJSON());
-			})
-		}
-		else
-			console.log('todo not found');
-	}).catch(function(e){
-		console.log(e);
-	})
-	*/
+			});
+		});
+	});
+	/*User.create({
+		email:'test@example.com'
+	}).then (function(){
+		return Todo.create({
+			description:'Clean Yard'
+		});
+	}).then (function(todo){
+		User.findById(1).then(function(user){
+			user.addTodo(todo);
+		});
+	});*/
 });
