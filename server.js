@@ -136,7 +136,9 @@ app.post('/users/login', function (req , res) {
 
 	where.email = body.email;
 	db.user.findOne({
-		where : where
+		where : {
+			email: body.email
+		}
 	}).then (function(){
 		if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))){
 			res.status(401).send();
