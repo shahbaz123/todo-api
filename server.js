@@ -125,7 +125,7 @@ app.post('/users', function(req, res) {
 });
 
 // POST /users/login
-app.post('users/login', function (req , res) {
+app.post('/users/login', function (req , res) {
 	var body = _.pick (req.body , 'email' , 'password');
     var where = {};
 
