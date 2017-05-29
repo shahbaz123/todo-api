@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 var db = require('./db.js');
-
+var bcrypt = require('bcrypt');
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -124,22 +124,33 @@ app.post('/users', function(req, res) {
 	});
 });
 
-//user get
-app.get('/users', function(req, res) {
-	var query = req.query;
-	var where = {};
-	if (query.hasOwnProperty('email')) {
-		where.email = {
-			$like: '%' + query.email + '%'
+// POST /users/login
+app.post('users/login', function (req , res) {
+	var body = _.pick (req.body , 'email' , 'password');
+    var where = {};
+
+	if (typeof body.email !== 'string' ||
+		typeof body.password !== 'string'){
+		return res.status(400).send();
+	}
+
+	where.email = body.email;
+	db.user.findOne({
+		where : where
+	}).then (function(){
+		if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))){
+			res.status(401).send();
+		}else {
+
+			res.json(user.toJSON());
 		}
-	};
-	db.user.findAll({
-		where: where
-	}).then(function(users) {
-		res.json(users);
-	}).catch(function(e) {
+	}).catch (function(e){
 		res.status(500).send();
 	});
+
+	res.json(body);
+
+
 });
 
 db.sequelize.sync().then(function() {
