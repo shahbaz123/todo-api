@@ -142,7 +142,7 @@ app.post('/users/login', function (req , res) {
 			res.status(401).send();
 		}else {
 
-			res.json(user.toJSON());
+			res.json(user.toPublicJSON());
 		}
 	}).catch (function(e){
 		res.status(500).send();
