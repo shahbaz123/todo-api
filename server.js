@@ -139,7 +139,7 @@ app.post('/users/login', function (req , res) {
 		where : {
 			email: body.email
 		}
-	}).then (function(){
+	}).then (function(user){
 		if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))){
 			res.status(401).send();
 		}else {
@@ -149,8 +149,6 @@ app.post('/users/login', function (req , res) {
 	}).catch (function(e){
 		res.status(500).send();
 	});
-
-	res.json(body);
 
 
 });
