@@ -129,8 +129,10 @@ app.post('/users/login', function(req, res) {
 	var body = _.pick(req.body, 'email', 'password');
 
 	db.user.authenticate(body).then(function(user) {
-		res.header('Auth', generateToken('authentication')).json(user.toPublicJSON());
+		res.header('Auth', user.generateToken('authentication')).json(user.toPublicJSON());
+		//res.json(user.toPublicJSON());
 	}).catch(function(e) {
+		// console.error(e);
 		res.status(401).send();
 	});
 });
