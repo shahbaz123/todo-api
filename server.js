@@ -48,7 +48,7 @@ app.get('/todos', middleware.requireAuthentication, function(req, res) {
 		where.description = {
 			$like: '%' + query.q + '%'
 		};
-
+	res.send(where);
 	db.todo.findAll({
 		where: where
 	}).then(function(todos) {
@@ -66,7 +66,7 @@ app.get('/todos/:id', middleware.requireAuthentication, function(req, res) {
 	where.userid = req.user.get('id');
 	where.id = todoId;
 
-	//console.log(where);
+	res.send(where);
 	db.todo.findOne({where:where}).then(function(todo) {
 		if (!!todo) {
 			res.status(200).json(todo.toJSON())
@@ -153,7 +153,7 @@ app.post('/users/login', function(req, res) {
 	});
 });
 
-db.sequelize.sync({force: true}).then(function() {
+db.sequelize.sync().then(function() {
 	app.listen(PORT, function() {
 		console.log('Express Listening on port ' + PORT + '!');
 	});
