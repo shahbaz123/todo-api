@@ -56,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
 						}
 					}).then(function(user) {
 						if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))) {
-							console.log('user not found');
+							console.log('user not found: ');
 							return reject(); //res.status(401).send();
 						} else {
 							resolve(user);
